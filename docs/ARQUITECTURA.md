@@ -41,9 +41,10 @@ sabe que existen los widgets; una pantalla no sabe que existe `dio`.
 | `AuthController` | Usuario de la sesión, si está cargando, el último error, el aviso de sesión | Todas las secciones protegidas |
 | `HabitosController` | Lista de hábitos, estado de carga, filtro, si viene de caché | Hábitos, Detalle, Asistente |
 | `CatalogoController` | Catálogo, favoritos, filtro por categoría | Catálogo, Favoritos |
+| `AsistenteController` | Consulta en curso, respuesta, error; ejecuta la acción confirmada a través de `HabitosController` | Asistente |
 
-Los tres se registran una sola vez: `AuthController` en `main()` con
-`permanent: true`, y los otros dos en `AppBinding`, que `GetMaterialApp`
+Se registran una sola vez: `AuthController` en `main()` con
+`permanent: true`, y los otros tres en `AppBinding`, que `GetMaterialApp`
 ejecuta antes de dibujar la primera pantalla.
 
 `setState` se usa **solo** para estado local: el índice de la pestaña, el

@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 
+import '../controllers/asistente_controller.dart';
 import '../controllers/catalogo_controller.dart';
 import '../controllers/habitos_controller.dart';
 
@@ -9,5 +10,6 @@ class AppBinding extends Bindings {
   void dependencies() {
     Get.put(HabitosController(), permanent: true);
     Get.put(CatalogoController(), permanent: true);
+    Get.put(AsistenteController(), permanent: true);
   }
 }

@@ -52,11 +52,15 @@ class RespuestaIA {
   final AccionPropuesta? accion;
   const RespuestaIA({required this.respuesta, this.accion});
 
-  factory RespuestaIA.fromJson(Map<String, dynamic> json) => RespuestaIA(
-        respuesta: (json['respuesta'] as String?) ??
-            'El asistente no devolvió ninguna respuesta.',
-        accion: AccionPropuesta.desdeJson(json['accion']),
-      );
+  factory RespuestaIA.fromJson(Map<String, dynamic> json) {
+    final texto = json['respuesta'];
+    return RespuestaIA(
+      respuesta: texto is String && texto.trim().isNotEmpty
+          ? texto
+          : 'El asistente no devolvió ninguna respuesta.',
+      accion: AccionPropuesta.desdeJson(json['accion']),
+    );
+  }
 }
 
 class AsistenteException implements Exception {

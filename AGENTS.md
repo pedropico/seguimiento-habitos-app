@@ -6,7 +6,7 @@ Este archivo lo leen los agentes de código (Claude Code, Codex, Antigravity…)
 
 seguimiento-habitos-app es una app Flutter (Android) para construir hábitos: crear hábitos, marcarlos cada día, ver la racha y el avance semanal, guardar sugerencias de un catálogo y preguntarle a un asistente de IA cómo va la semana.
 
-- Estado con **GetX** (`AuthController`, `HabitosController`, `CatalogoController`).
+- Estado con **GetX** (`AuthController`, `HabitosController`, `CatalogoController`, `AsistenteController`).
 - Datos remotos con **dio** contra el backend `seguimiento-habitos-backend` (FastAPI + JWT).
 - Caché local y catálogo con **Hive**; token en **flutter_secure_storage**.
 - Asistente de IA a través de un **proxy propio** (`mock-server/`). La app no tiene ninguna clave de IA.

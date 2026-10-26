@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../controllers/asistente_controller.dart';
 import '../controllers/auth_controller.dart';
-import '../controllers/habitos_controller.dart';
 import '../services/ai_assistant_service.dart';
 import '../theme/app_theme.dart';
 import '../widgets/sin_sesion_view.dart';
@@ -19,12 +19,7 @@ class AsistenteScreen extends StatefulWidget {
 class _AsistenteScreenState extends State<AsistenteScreen> {
   final _consulta = TextEditingController();
   final _auth = Get.find<AuthController>();
-  final _habitos = Get.find<HabitosController>();
-  late final AiAssistantService _servicio = Get.find<AiAssistantService>();
-
-  bool _cargando = false;
-  String _respuesta = '';
-  String _error = '';
+  final _asistente = Get.find<AsistenteController>();
 
   static const _sugerencias = [
     '¿Cómo voy esta semana?',
@@ -40,25 +35,11 @@ class _AsistenteScreenState extends State<AsistenteScreen> {
 
   Future<void> _preguntar([String? texto]) async {
     final consulta = (texto ?? _consulta.text).trim();
-    if (consulta.isEmpty || _cargando) return;
+    if (consulta.isEmpty) return;
     _consulta.text = consulta;
 
-    setState(() {
-      _cargando = true;
-      _error = '';
-      _respuesta = '';
-    });
-
-    try {
-      final r = await _servicio.preguntar(consulta, _habitos.resumen());
-      if (!mounted) return;
-      setState(() => _respuesta = r.respuesta);
-      if (r.accion != null) await _confirmar(r.accion!);
-    } on AsistenteException catch (e) {
-      if (mounted) setState(() => _error = e.mensaje);
-    } finally {
-      if (mounted) setState(() => _cargando = false);
-    }
+    final accion = await _asistente.preguntar(consulta);
+    if (accion != null && mounted) await _confirmar(accion);
   }
 
   Future<void> _confirmar(AccionPropuesta accion) async {
@@ -82,23 +63,8 @@ class _AsistenteScreenState extends State<AsistenteScreen> {
     );
     if (ok != true) return;
 
-    try {
-      if (accion.tipo == 'marcar_habito') {
-        final habito = _habitos.buscarPorNombre(accion.nombre);
-        if (habito == null) {
-          Get.snackbar('No encontré ese hábito',
-              'No tienes ninguno llamado «${accion.nombre}».');
-          return;
-        }
-        await _habitos.marcar(habito.id);
-        Get.snackbar('Listo', '«${habito.nombre}» quedó marcado hoy.');
-      } else {
-        await _habitos.crear(accion.nombre, accion.frecuenciaObjetivo ?? 3);
-        Get.snackbar('Listo', 'Se creó el hábito «${accion.nombre}».');
-      }
-    } on Exception catch (e) {
-      Get.snackbar('El servidor rechazó la acción', '$e');
-    }
+    final (titulo, mensaje) = await _asistente.ejecutar(accion);
+    Get.snackbar(titulo, mensaje);
   }
 
   @override
@@ -110,6 +76,9 @@ class _AsistenteScreenState extends State<AsistenteScreen> {
           mensaje: 'Inicia sesión para que el asistente conozca tus hábitos.',
         );
       }
+      final cargando = _asistente.cargando.value;
+      final error = _asistente.mensajeError.value;
+      final respuesta = _asistente.respuesta.value;
       return Scaffold(
         appBar: AppBar(title: const Text('Asistente')),
         body: ListView(
@@ -133,28 +102,28 @@ class _AsistenteScreenState extends State<AsistenteScreen> {
                 for (final s in _sugerencias)
                   ActionChip(
                     label: Text(s),
-                    onPressed: _cargando ? null : () => _preguntar(s),
+                    onPressed: cargando ? null : () => _preguntar(s),
                   ),
               ],
             ),
             const SizedBox(height: AppSpacing.md),
             FilledButton.icon(
-              onPressed: _cargando ? null : () => _preguntar(),
+              onPressed: cargando ? null : () => _preguntar(),
               icon: const Icon(Icons.auto_awesome),
               label: const Text('Preguntar'),
             ),
             const SizedBox(height: AppSpacing.lg),
-            if (_cargando)
+            if (cargando)
               const Center(child: CircularProgressIndicator())
-            else if (_error.isNotEmpty)
+            else if (error.isNotEmpty)
               _Caja(
                 color: Theme.of(context).colorScheme.errorContainer,
-                texto: _error,
+                texto: error,
               )
-            else if (_respuesta.isNotEmpty)
+            else if (respuesta.isNotEmpty)
               _Caja(
                 color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                texto: _respuesta,
+                texto: respuesta,
               ),
           ],
         ),
