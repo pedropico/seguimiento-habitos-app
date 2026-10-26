@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_dispatch: # también a mano: pestaña Actions → «CI» → «Run workflow»
+
+permissions:
+  contents: read # este workflow solo lee el código
+
+# Un push nuevo cancela la ejecución anterior de la misma rama.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verificar:
+    name: Formato, análisis, pruebas y secretos
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Descargar el código
+        uses: actions/checkout@v7
+
+      - name: Instalar Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.47.5
+          cache: true
+
+      - name: Dependencias
+        run: flutter pub get
+
+      - name: Formato
+        run: dart format --output=none --set-exit-if-changed lib test
+
+      - name: Análisis estático
+        run: flutter analyze
+
+      - name: Pruebas
+        run: flutter test
+
+      - name: Sintaxis del proxy
+        run: node --check mock-server/mock-server.js
+
+      - name: Auditoría de secretos
+        run: |
+          if grep -rnE "AIza[0-9A-Za-z_-]{30,}|sk-[a-zA-Z0-9]{20,}" lib test mock-server .github; then
+            echo "::error::Se encontró algo con forma de clave. Rótala en el servicio que la emitió antes de seguir."
+            exit 1
+          fi
+          if git ls-files --error-unmatch .env > /dev/null 2>&1; then
+            echo "::error::.env está versionado. Debe quedar solo en .gitignore."
+            exit 1
+          fi
+          echo "Sin secretos a la vista."

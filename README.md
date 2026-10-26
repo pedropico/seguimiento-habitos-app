@@ -225,14 +225,27 @@ El token **nunca** llega a los registros: `ReporteErrores.limpiar()` reemplaza
 cualquier cabecera `Bearer` y cualquier JWT por asteriscos antes de registrar
 un error, y hay pruebas que lo comprueban.
 
-La auditoría de secretos busca patrones de clave en `lib/`, `test/` y
-`mock-server/`. Conviene correrla antes de cada commit:
+La auditoría de secretos corre en cada cambio (paso «Auditoría de secretos» de
+la CI) y busca patrones de clave en `lib/`, `test/`, `mock-server/` y
+`.github/`. Para correrla a mano antes de un commit:
 
 ```bash
 grep -rniE "AIza[0-9A-Za-z_-]{30,}|sk-[a-zA-Z0-9]{20,}" lib test mock-server
 git check-ignore -v .env      # debe mostrar la regla de .gitignore
 git log --all --oneline -- .env   # no debe imprimir nada
 ```
+
+---
+
+## Integración continua
+
+| Workflow | Cuándo corre | Qué hace |
+|---|---|---|
+| [`ci.yml`](.github/workflows/ci.yml) | Cada push (a cualquier rama), cada pull request, o a mano desde la pestaña *Actions* | Formato, análisis, pruebas, sintaxis del proxy y auditoría de secretos |
+
+Usa la misma versión de Flutter que en desarrollo (3.47.5). Si un paso falla,
+el detalle está en la pestaña **Actions** del repositorio; se reproduce en
+local con los comandos de [Probar que todo funciona](#probar-que-todo-funciona).
 
 ---
 

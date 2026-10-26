@@ -7,6 +7,7 @@ Para recorrer en un entorno limpio, no en el computador donde se desarrolló.
 - [ ] `dart format --output=none --set-exit-if-changed lib test` pasa
 - [ ] `flutter analyze` termina sin errores
 - [ ] `flutter test` termina con todas en verde
+- [ ] La CI (`.github/workflows/ci.yml`) está en verde en la rama principal
 
 ## Seguridad
 
