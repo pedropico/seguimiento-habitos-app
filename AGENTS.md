@@ -2,8 +2,6 @@
 
 Este archivo lo leen los agentes de código (Claude Code, Codex, Antigravity…) al abrir esta carpeta. Es el **archivo de contexto** del proyecto. Se mantiene corto y concreto, y se mejora cada vez que un agente se equivoca.
 
-Nota importante: el archivo de contexto **guía**; no obliga. Lo que se impone son los **permisos** y los **hooks** de `.claude/settings.json`.
-
 ## Qué es el proyecto
 
 seguimiento-habitos-app es una app Flutter (Android) para construir hábitos: crear hábitos, marcarlos cada día, ver la racha y el avance semanal, guardar sugerencias de un catálogo y preguntarle a un asistente de IA cómo va la semana.
@@ -47,7 +45,8 @@ Los dos deben terminar sin errores. Si fallan, corrige el código: **no desactiv
 - Escribir claves, tokens o contraseñas en el código, en los registros o en este archivo. No leer ni modificar `.env`.
 - Guardar el token en Hive o en SharedPreferences: va al almacenamiento seguro.
 - Agregar dependencias nuevas sin avisar antes y explicar por qué hacen falta.
-- Ejecutar `git push` o crear etiquetas: eso lo hace una persona, después de leer el `git diff`.
+- Ejecutar `git commit`, `git push` o crear etiquetas: eso lo hace una persona, después de leer el `git diff`.
+- Estas prohibiciones sobre `.env` y git las bloquean además los permisos de `.claude/settings.json`.
 
 ## Reglas propias de este proyecto
 
