@@ -38,12 +38,12 @@ class HabitosApiService {
   Future<Habito> crear(String nombre, int frecuenciaObjetivo) async {
     final r = await _client.post('/habitos/',
         data: {'nombre': nombre, 'frecuencia_objetivo': frecuenciaObjetivo});
-    return Habito.fromJson(Map<String, dynamic>.from(r.data as Map));
+    return Habito.fromJson(_objeto(r.data, 'al crear el hábito'));
   }
 
   Future<Habito> actualizar(int id, Map<String, dynamic> cambios) async {
     final r = await _client.patch('/habitos/$id', data: cambios);
-    return Habito.fromJson(Map<String, dynamic>.from(r.data as Map));
+    return Habito.fromJson(_objeto(r.data, 'al actualizar el hábito'));
   }
 
   Future<void> eliminar(int id) async {
@@ -53,6 +53,13 @@ class HabitosApiService {
   Future<Registro> marcar(int id, {String? fecha}) async {
     final r = await _client.post('/habitos/$id/marcar',
         data: fecha == null ? const <String, dynamic>{} : {'fecha': fecha});
-    return Registro.fromJson(Map<String, dynamic>.from(r.data as Map));
+    return Registro.fromJson(_objeto(r.data, 'al marcar el hábito'));
+  }
+
+  Map<String, dynamic> _objeto(Object? datos, String contexto) {
+    if (datos is! Map) {
+      throw ApiException('Respuesta inesperada del servidor $contexto.');
+    }
+    return Map<String, dynamic>.from(datos);
   }
 }

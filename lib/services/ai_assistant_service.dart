@@ -103,9 +103,8 @@ class AiAssistantService {
           throw AsistenteException(
               'El asistente tardó demasiado en responder. Inténtalo de nuevo.');
         case DioExceptionType.badResponse:
-          final detail = e.response?.data is Map
-              ? (e.response!.data as Map)['detail']
-              : null;
+          final datos = e.response?.data;
+          final detail = datos is Map ? datos['detail'] : null;
           throw AsistenteException(detail is String
               ? detail
               : 'El asistente respondió con un error (código ${e.response?.statusCode}).');

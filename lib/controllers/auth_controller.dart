@@ -54,7 +54,12 @@ class AuthController extends GetxController {
         data: {'username': email, 'password': password},
         options: Options(contentType: Headers.formUrlEncodedContentType),
       );
-      final token = (r.data as Map)['access_token'] as String;
+      final datos = r.data;
+      final token = datos is Map ? datos['access_token'] : null;
+      if (token is! String || token.isEmpty) {
+        throw ApiException(
+            'Respuesta inesperada del servidor al iniciar sesión.');
+      }
       _aplicarToken(token);
       await _almacen.guardar(token);
       avisoSesion.value = '';
