@@ -95,8 +95,7 @@ class HabitosScreen extends StatelessWidget {
           context: context,
           applicationName: 'seguimiento-habitos-app',
           applicationVersion: '1.0.0',
-          applicationLegalese:
-              'Proyecto de desarrollo de aplicaciones móviles '
+          applicationLegalese: 'Proyecto de desarrollo de aplicaciones móviles '
               'robustas con flutter e IA.',
         );
     }

@@ -20,6 +20,7 @@ media mañana.
 
 ## Requisitos
 
+- **Git** — para clonar el repositorio del backend.
 - **Flutter 3.24+** con Dart 3.5+ (`flutter --version`).
 - Para el backend, una de dos: **Docker Desktop** (con Docker Compose) o
   **Python 3.11+** y [uv](https://docs.astral.sh/uv/).
@@ -38,16 +39,18 @@ espera encontrar el backend encendido.
 
 ### 1. Backend de hábitos
 
-El backend vive en otro repositorio, `seguimiento-habitos-pedro`, se recomienda desplegar el repositorio en una
+El backend vive en otro repositorio, se recomienda desplegar el repositorio en una
 carpeta hermana de `seguimiento-habitos-app` (las dos dentro del mismo directorio) ejemplo:
 
 ```
 proyecto-habitos/
-├── seguimiento-habitos-app/          ← esta app
-└── seguimiento-habitos-pedro/        ← el backend
+├── seguimiento-habitos-app/        ← esta app
+└── seguimiento-habitos-backend/    ← el backend
 ```
 
-Ingresar al directorio del backend con `cd ../seguimiento-habitos-pedro`. Se puede
+#### Levantar el backend
+
+Ingresar al directorio del backend con `cd ./seguimiento-habitos-backend`. Se puede
 levantar de dos formas; con Docker no hace falta instalar Python ni uv.
 
 #### Opción A — Docker Compose
@@ -55,19 +58,17 @@ levantar de dos formas; con Docker no hace falta instalar Python ni uv.
 Requiere **Docker Desktop** abierto.
 
 ```bash
-cd ../seguimiento-habitos-pedro
 cp .env.example .env          # en PowerShell: copy .env.example .env
 docker compose up --build     # la primera vez construye la imagen
 ```
 
 Para apagarlo: `Ctrl+C`, o `docker compose down` desde otra terminal. Las
-siguientes veces basta con `docker compose up` (se puede añadir el parametro `-d` 
+siguientes veces basta con `docker compose up` (se puede añadir el parámetro `-d` 
 para dejarlo en segundo plano y ver los registros con `docker compose logs -f`).
 
 #### Opción B — Sin Docker
 
 ```bash
-cd ../seguimiento-habitos-pedro
 cp .env.example .env          # en PowerShell: copy .env.example .env
 uv sync                       # o: python -m venv .venv && pip install -e .
 uv run alembic upgrade head   # crea las tablas
@@ -87,6 +88,8 @@ La documentación interactiva se expone en <http://localhost:8000/docs>.
 
 ### 2. Proxy del asistente
 
+En una **terminal nueva**, desde `proyecto-habitos/`:
+
 ```bash
 cd seguimiento-habitos-app
 node mock-server/mock-server.js
@@ -97,6 +100,13 @@ falta crear cuentas en ningún sitio. Para usar el agente de IA real, revisar
 [`mock-server/README.md`](mock-server/README.md).
 
 ### 3. La app
+
+En una **terminal nueva**, desde `proyecto-habitos/`, entrar a la carpeta de la
+app; todos los comandos de este paso se ejecutan dentro de ella:
+
+```bash
+cd seguimiento-habitos-app
+```
 
 La primera vez, genera el andamiaje de Android (no está versionado):
 
@@ -185,11 +195,13 @@ Cuando la pantalla de Hábitos pide la lista:
    caché: propaga el error. Mostrar datos viejos ante un 401 le haría creer a
    la persona que sigue dentro de su sesión.
 
-### Se gestiona una desición de leer el `sub` del JWT en vez de pedir el perfil
+### Se gestiona una decisión de leer el `sub` del JWT en vez de pedir el perfil
 
-Se realizó de esta forma ya que cada usuario tiene su propia caja de Hive (`habitos_<id>`), 
-ya que de gestionarse por medio del perfil proveniente podría causar la mezcla de datos 
-entre usuarios.
+Cada usuario tiene su propia caja de Hive (`habitos_<id>`): Hive guarda **sin
+cifrar** y, con un nombre fijo, dos personas que compartan el teléfono
+mezclarían sus datos. Para nombrar la caja hace falta el id del usuario, y este
+backend no expone `GET /usuarios/me` para pedirlo; por eso se lee del campo
+`sub` del propio token, que ya viaja firmado por el servidor.
 
 El matiz importante es que la app **lee** el contenido del token, no lo **verifica**.
 Verificar la firma exige la clave secreta, que solo tiene el servidor. Por ello
@@ -231,9 +243,9 @@ git log --all --oneline -- .env   # no debe imprimir nada
 - **Paquetes**: `get`, `dio`, `hive` / `hive_flutter`, `flutter_secure_storage`,
   `path_provider`, `cupertino_icons`. Licencias visibles en la app:
   menú ⋮ → **Acerca de**.
-- **Catálogo de hábitos** (`assets/data/catalogo.json`): elaborado para este
-  proyecto a partir de recomendaciones generales de salud y productividad. No
-  reproduce ninguna fuente con derechos.
+- **Catálogo de hábitos**: lo suministra el backend (`GET /sugerencias/`),
+  elaborado para este proyecto a partir de recomendaciones generales de salud y
+  productividad. No reproduce ninguna fuente con derechos.
 - **Proveedor de IA**: Google Gemini a través del proxy, opcional. El modo de
   reglas no usa ningún servicio externo.
 

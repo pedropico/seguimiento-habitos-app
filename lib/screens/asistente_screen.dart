@@ -68,7 +68,7 @@ class _AsistenteScreenState extends State<AsistenteScreen> {
         title: const Text('Confirmar acción'),
         content: Text(
           '${accion.descripcionParaConfirmar}\n\n'
-          'La sugerencia viene de una IA: revísala antes de aceptar.',
+          'La sugerencia es generada por IA: revísala antes de aceptar.',
         ),
         actions: [
           TextButton(

@@ -21,7 +21,7 @@ const http = require('http');
 
 const PUERTO = Number(process.env.PORT) || 3000;
 const CLAVE = (process.env.GEMINI_API_KEY || '').trim();
-const MODELO = (process.env.GEMINI_MODEL || 'gemini-2.5-flash').trim();
+const MODELO = (process.env.GEMINI_MODEL || 'gemini-3.5-flash-lite').trim();
 const URL_BASE = (process.env.GEMINI_BASE_URL || 'https://generativelanguage.googleapis.com').replace(/\/$/, '');
 const ESPERA_MAX_MS = 15000;
 const LARGO_MAX_CONSULTA = 500;

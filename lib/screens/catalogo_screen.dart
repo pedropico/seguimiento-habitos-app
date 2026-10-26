@@ -4,7 +4,10 @@ import 'package:get/get.dart';
 import '../controllers/catalogo_controller.dart';
 import '../models/plantilla_habito.dart';
 import '../theme/app_theme.dart';
+import '../widgets/banner_cache.dart';
 import '../widgets/empty_view.dart';
+import '../widgets/error_view.dart';
+import '../widgets/loading_view.dart';
 import '../widgets/plantilla_card.dart';
 import 'habito_form_screen.dart';
 
@@ -21,22 +24,36 @@ class CatalogoScreen extends StatelessWidget {
         actions: [
           IconButton(
             tooltip: 'Recargar',
-            onPressed: c.recargar,
+            onPressed: c.cargar,
             icon: const Icon(Icons.refresh),
           ),
         ],
       ),
       body: Obx(() {
+        if (c.cargando.value && c.plantillas.isEmpty) {
+          return const LoadingView(mensaje: 'Cargando sugerencias...');
+        }
+        if (c.mensajeError.value.isNotEmpty && c.plantillas.isEmpty) {
+          return ErrorView(
+            mensaje: c.mensajeError.value,
+            onReintentar: c.cargar,
+          );
+        }
         if (c.plantillas.isEmpty) {
           return EmptyView(
             icono: Icons.menu_book_outlined,
-            mensaje: 'El catálogo no se pudo cargar.',
-            textoAccion: 'Reintentar',
-            onAccion: c.recargar,
+            mensaje: 'Todavía no hay sugerencias disponibles.',
+            textoAccion: 'Recargar',
+            onAccion: c.cargar,
           );
         }
         return Column(
           children: [
+            if (c.desdeCache.value)
+              BannerCache(
+                ultimaSincronizacion: c.ultimaSincronizacion,
+                onReintentar: c.cargar,
+              ),
             _FiltroCategorias(controller: c),
             Expanded(
               child: Obx(() {
@@ -47,17 +64,20 @@ class CatalogoScreen extends StatelessWidget {
                     mensaje: 'No hay sugerencias en esta categoría.',
                   );
                 }
-                return ListView.builder(
-                  itemCount: lista.length,
-                  itemBuilder: (_, i) {
-                    final p = lista[i];
-                    return Obx(() => PlantillaCard(
-                          plantilla: p,
-                          esFavorito: c.esFavorito(p.id),
-                          onFavorito: () => c.alternarFavorito(p),
-                          onAdoptar: () => _adoptar(p),
-                        ));
-                  },
+                return RefreshIndicator(
+                  onRefresh: c.cargar,
+                  child: ListView.builder(
+                    itemCount: lista.length,
+                    itemBuilder: (_, i) {
+                      final p = lista[i];
+                      return Obx(() => PlantillaCard(
+                            plantilla: p,
+                            esFavorito: c.esFavorito(p.id),
+                            onFavorito: () => c.alternarFavorito(p),
+                            onAdoptar: () => _adoptar(p),
+                          ));
+                    },
+                  ),
                 );
               }),
             ),

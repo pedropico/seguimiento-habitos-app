@@ -9,7 +9,7 @@ Nota importante: el archivo de contexto **guía**; no obliga. Lo que se impone s
 seguimiento-habitos-app es una app Flutter (Android) para construir hábitos: crear hábitos, marcarlos cada día, ver la racha y el avance semanal, guardar sugerencias de un catálogo y preguntarle a un asistente de IA cómo va la semana.
 
 - Estado con **GetX** (`AuthController`, `HabitosController`, `CatalogoController`).
-- Datos remotos con **dio** contra el backend `seguimiento-habitos-pedro` (FastAPI + JWT).
+- Datos remotos con **dio** contra el backend `seguimiento-habitos-backend` (FastAPI + JWT).
 - Caché local y catálogo con **Hive**; token en **flutter_secure_storage**.
 - Asistente de IA a través de un **proxy propio** (`mock-server/`). La app no tiene ninguna clave de IA.
 
@@ -20,7 +20,7 @@ seguimiento-habitos-app es una app Flutter (Android) para construir hábitos: cr
 - `lib/repositories/` — decide si los datos salen de la red o de la caché.
 - `lib/screens/` y `lib/widgets/` — pantallas y piezas de interfaz.
 - `lib/models/`, `lib/utils/` — modelos y utilidades.
-- `assets/data/catalogo.json` — el conjunto de datos del catálogo (20 registros).
+- El catálogo sale del backend (`GET /sugerencias/`, hasta 20 registros) y se guarda una copia en Hive para usarla sin conexión.
 - `mock-server/` — el proxy del asistente (Node.js, sin dependencias).
 - `test/` — pruebas de lógica, de widgets y del repositorio.
 

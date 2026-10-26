@@ -83,7 +83,7 @@ guardados sin decirlo.**
 | Caja | Qué guarda | Al cerrar sesión |
 |---|---|---|
 | `habitos_<id>` | La copia de los hábitos de esa persona | **Se borra del disco** |
-| `catalogo` | Los 20 registros del catálogo | Se queda |
+| `catalogo` | La última copia de `GET /sugerencias/` (hasta 20), para usarla sin conexión | Se queda |
 | `favoritos` | Las sugerencias guardadas | Se queda |
 
 La primera lleva el id del usuario porque Hive guarda **sin cifrar**: con un

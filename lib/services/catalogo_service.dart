@@ -1,6 +1,3 @@
-import 'dart:convert';
-
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:hive/hive.dart';
 
 import '../models/plantilla_habito.dart';
@@ -10,50 +7,43 @@ class CatalogoService {
 
   static const String cajaCatalogo = 'catalogo';
   static const String cajaFavoritos = 'favoritos';
-  static const String _claveVersion = '_version';
-  static const String _rutaAsset = 'assets/data/catalogo.json';
+  static const String _claveSincronizado = '_sincronizado';
 
   static Box<Map>? _catalogo;
   static Box<Map>? _favoritos;
 
-  static Future<void> abrir({String? jsonDePrueba}) async {
+  static Future<void> abrir() async {
     _catalogo = await Hive.openBox<Map>(cajaCatalogo);
     _favoritos = await Hive.openBox<Map>(cajaFavoritos);
-    await _sembrarSiHaceFalta(jsonDePrueba);
   }
 
-  static Future<void> _sembrarSiHaceFalta(String? jsonDePrueba) async {
+  static Future<void> guardarPlantillas(
+      List<PlantillaHabito> plantillas) async {
     final caja = _catalogo;
-    if (caja == null) return;
-
-    final crudo = jsonDePrueba ?? await rootBundle.loadString(_rutaAsset);
-    final json = jsonDecode(crudo);
-    if (json is! Map) return;
-    final version = (json['version'] as num?)?.toInt() ?? 1;
-    final guardada = (caja.get(_claveVersion)?['valor'] as num?)?.toInt() ?? 0;
-
-    final hayPlantillas = caja.keys.where((k) => k != _claveVersion).isNotEmpty;
-    if (hayPlantillas && guardada >= version) return;
-
-    final plantillas = (json['plantillas'] as List? ?? const [])
-        .whereType<Map>()
-        .map((m) => PlantillaHabito.fromJson(Map<String, dynamic>.from(m)));
-    for (final p in plantillas) {
-      await caja.put(p.id, p.toMap());
-    }
-    await caja.put(_claveVersion, {'valor': version});
+    if (caja == null || !caja.isOpen) return;
+    await caja.clear();
+    await caja.putAll({for (final p in plantillas) p.id: p.toMap()});
+    await caja
+        .put(_claveSincronizado, {'valor': DateTime.now().toIso8601String()});
   }
 
-  static List<PlantillaHabito> plantillas() {
+  /// `null` si nunca se sincronizó: no hay copia a la que recurrir.
+  static List<PlantillaHabito>? plantillasGuardadas() {
     final caja = _catalogo;
-    if (caja == null || !caja.isOpen) return const [];
+    if (caja == null || !caja.isOpen) return null;
+    if (!caja.containsKey(_claveSincronizado)) return null;
     return caja.keys
-        .where((k) => k != _claveVersion)
+        .where((k) => k != _claveSincronizado)
         .map((k) => caja.get(k))
         .whereType<Map>()
         .map(PlantillaHabito.fromMap)
         .toList()
       ..sort((a, b) => a.nombre.compareTo(b.nombre));
+  }
+
+  static DateTime? ultimaSincronizacion() {
+    final iso = _catalogo?.get(_claveSincronizado)?['valor'];
+    return iso is String ? DateTime.tryParse(iso)?.toLocal() : null;
   }
 
   static List<PlantillaHabito> favoritos() {
