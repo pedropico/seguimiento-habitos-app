@@ -44,6 +44,8 @@ Para recorrer en un entorno limpio, no en el computador donde se desarrolló.
 
 ## Entrega
 
+- [ ] El Release existe, con el APK adjunto
+- [ ] El APK se instaló y abrió en un emulador limpio (`adb uninstall` primero)
 - [ ] El `README.md` se puede seguir sin preguntar nada
 - [ ] El repositorio tiene historial de commits real, no uno solo al final
 - [ ] El enlace del repositorio está subido a Moodle, antes de la hora límite

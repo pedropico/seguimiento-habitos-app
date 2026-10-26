@@ -1,0 +1,81 @@
+name: Release APK
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch: # a mano: pestaña Actions → «Release APK» → «Run workflow» (solo genera el artefacto)
+
+permissions:
+  contents: write # necesario para crear el Release y adjuntar el APK
+
+jobs:
+  apk:
+    name: Verificar, compilar y publicar el APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Descargar el código
+        uses: actions/checkout@v7
+
+      - name: Instalar Java 17
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      # Misma versión que en desarrollo y en ci.yml.
+      - name: Instalar Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.47.5
+          cache: true
+
+      - name: Descargar las dependencias
+        run: flutter pub get
+
+      - name: Formato
+        run: dart format --output=none --set-exit-if-changed lib test
+
+      - name: Analizar el código
+        run: flutter analyze
+
+      - name: Ejecutar las pruebas
+        run: flutter test
+
+      # android/ no se versiona salvo el README y el manifiesto: se regenera
+      # aquí. `flutter create` no sobrescribe archivos existentes, así que el
+      # manifiesto del repositorio (INTERNET + tráfico HTTP) se conserva.
+      - name: Generar el andamiaje de Android
+        run: flutter create . --platforms=android --project-name seguimiento_habitos_app
+
+      - name: Comprobar el manifiesto
+        run: |
+          manifiesto=android/app/src/main/AndroidManifest.xml
+          grep -q 'android.permission.INTERNET' "$manifiesto" || { echo "::error::Falta el permiso de INTERNET en $manifiesto"; exit 1; }
+          grep -q 'usesCleartextTraffic="true"' "$manifiesto" || { echo "::error::Falta usesCleartextTraffic en $manifiesto"; exit 1; }
+
+      # Sin variables definidas en el repositorio, el APK apunta al emulador
+      # (10.0.2.2 es el localhost del computador que lo hospeda).
+      - name: Compilar el APK de release
+        run: >
+          flutter build apk --release
+          --dart-define=API_BASE_URL=${{ vars.API_BASE_URL || 'http://10.0.2.2:8000' }}
+          --dart-define=LLM_BACKEND_URL=${{ vars.LLM_BACKEND_URL || 'http://10.0.2.2:3000' }}
+
+      - name: Nombrar el APK con la versión
+        run: cp build/app/outputs/flutter-apk/app-release.apk "seguimiento-habitos-app-${{ github.ref_name }}.apk"
+
+      - name: Guardar el APK como artefacto de la ejecución
+        uses: actions/upload-artifact@v7
+        with:
+          name: seguimiento-habitos-app-apk
+          path: seguimiento-habitos-app-${{ github.ref_name }}.apk
+
+      - name: Publicar el Release con el APK (solo con etiqueta)
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v3
+        with:
+          files: seguimiento-habitos-app-${{ github.ref_name }}.apk
+          generate_release_notes: true

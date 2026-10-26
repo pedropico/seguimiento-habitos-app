@@ -7,7 +7,7 @@ Este archivo lo leen los agentes de código (Claude Code, Codex, Antigravity…)
 seguimiento-habitos-app es una app Flutter (Android) para construir hábitos: crear hábitos, marcarlos cada día, ver la racha y el avance semanal, guardar sugerencias de un catálogo y preguntarle a un asistente de IA cómo va la semana.
 
 - Estado con **GetX** (`AuthController`, `HabitosController`, `CatalogoController`, `AsistenteController`).
-- Datos remotos con **dio** contra el backend `seguimiento-habitos-backend` (FastAPI + JWT).
+- Datos remotos con **dio** contra el backend del repositorio `seguimiento-habitos-pedro` (FastAPI + JWT), que se descarga en la carpeta hermana `seguimiento-habitos-backend`.
 - Caché local y catálogo con **Hive**; token en **flutter_secure_storage**.
 - Asistente de IA a través de un **proxy propio** (`mock-server/`). La app no tiene ninguna clave de IA.
 
@@ -20,16 +20,19 @@ seguimiento-habitos-app es una app Flutter (Android) para construir hábitos: cr
 - `lib/models/`, `lib/utils/` — modelos y utilidades.
 - El catálogo sale del backend (`GET /sugerencias/`, hasta 20 registros) y se guarda una copia en Hive para usarla sin conexión.
 - `mock-server/` — el proxy del asistente (Node.js, sin dependencias).
-- `test/` — pruebas de lógica, de widgets y del repositorio.
+- `test/` — pruebas de lógica, de widgets, de controladores y de los repositorios.
+- `android/` — solo se versionan `README.md` y `app/src/main/AndroidManifest.xml`; el resto lo genera `flutter create` y está en `.gitignore`.
+- `.github/workflows/ci.yml` — la CI que verifica cada push; `docs/` — arquitectura, README de entrega, capturas y lista de verificación.
 
 ## Cómo verificar (siempre, antes de dar un cambio por terminado)
 
 ```bash
+dart format --output=none --set-exit-if-changed lib test
 flutter analyze
 flutter test
 ```
 
-Los dos deben terminar sin errores. Si fallan, corrige el código: **no desactives el análisis ni borres pruebas para que pasen**.
+Los tres deben terminar sin errores (son los mismos pasos de la CI). Si fallan, corrige el código: **no desactives el análisis ni borres pruebas para que pasen**.
 
 ## Convenciones
 

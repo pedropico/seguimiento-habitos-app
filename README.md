@@ -48,6 +48,20 @@ proyecto-habitos/
 └── seguimiento-habitos-backend/    ← el backend
 ```
 
+#### Obtener el repositorio del backend
+
+| | |
+|---|---|
+| **Repositorio** | `https://github.com/pedropico/seguimiento-habitos-pedro.git` |
+
+Desde la carpeta que contiene a `seguimiento-habitos-app` (no desde dentro de
+ella):
+
+```bash
+# Ejecutar cd .. si aún se está dentro del directorio seguimiento-habitos-app
+git clone https://github.com/pedropico/seguimiento-habitos-pedro.git seguimiento-habitos-backend
+```
+
 #### Levantar el backend
 
 Ingresar al directorio del backend con `cd ./seguimiento-habitos-backend`. Se puede
@@ -237,21 +251,46 @@ git log --all --oneline -- .env   # no debe imprimir nada
 
 ---
 
-## Integración continua
+## Entrega: la CI y el APK
 
 | Workflow | Cuándo corre | Qué hace |
 |---|---|---|
 | [`ci.yml`](.github/workflows/ci.yml) | Cada push (a cualquier rama), cada pull request, o a mano desde la pestaña *Actions* | Formato, análisis, pruebas, sintaxis del proxy y auditoría de secretos |
+| [`release-apk.yml`](.github/workflows/release-apk.yml) | Al subir una etiqueta `v*` | Vuelve a verificar, genera el andamiaje de Android, compila el APK de release y lo publica en *Releases* |
 
-Usa la misma versión de Flutter que en desarrollo (3.47.5). Si un paso falla,
-el detalle está en la pestaña **Actions** del repositorio; se reproduce en
-local con los comandos de [Probar que todo funciona](#probar-que-todo-funciona).
+Los dos usan la misma versión de Flutter que en desarrollo (3.47.5). Si un paso
+falla, el detalle está en la pestaña **Actions** del repositorio; se reproduce
+en local con los comandos de [Probar que todo funciona](#probar-que-todo-funciona).
+
+Un push normal solo ejecuta la CI. Una versión nueva se publica únicamente al
+subir una etiqueta, después de subir los commits:
+
+```bash
+git push
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+### Instalar el APK
+
+El APK queda en la sección **Releases** del repositorio, con el nombre
+`seguimiento-habitos-app-v1.0.0.apk`. Para instalarlo en un emulador:
+
+```bash
+adb uninstall com.example.seguimiento_habitos_app   # si había una versión de depuración
+adb install -r seguimiento-habitos-app-v1.0.0.apk
+```
+
+> Dos firmas distintas no se instalan una sobre otra: por eso el `uninstall`
+> previo. El APK apunta a `10.0.2.2` (el computador visto desde el emulador),
+> así que el backend y el proxy tienen que estar encendidos; si no, la app
+> muestra su pantalla de error, que es el comportamiento correcto.
 
 ---
 
 ## Créditos y licencias
 
-- **Backend**: `seguimiento-habitos-pedro` — FastAPI, SQLAlchemy 2.0, Alembic y MCP.
+- **Backend**: `seguimiento-habitos-pedro` (`https://github.com/pedropico/seguimiento-habitos-pedro.git`) — FastAPI, SQLAlchemy 2.0, Alembic y MCP.
   Proyecto del módulo 2.
 - **Paquetes**: `get`, `dio`, `hive` / `hive_flutter`, `flutter_secure_storage`,
   `path_provider`, `cupertino_icons`. Licencias visibles en la app:

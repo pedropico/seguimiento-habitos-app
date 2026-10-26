@@ -40,11 +40,12 @@ proyecto-habitos/
 └── seguimiento-habitos-backend/    ← el backend
 ```
 
-1. **Backend** (terminal 1, desde `proyecto-habitos/`, con el repositorio
-   `seguimiento-habitos-pedro` descargado en la carpeta
-   `seguimiento-habitos-backend`):
+1. **Backend** (terminal 1, desde `proyecto-habitos/`). Repositorio:
+   `https://github.com/pedropico/seguimiento-habitos-pedro.git`
 
    ```bash
+   # Ejecutar cd .. si aún se está dentro del directorio seguimiento-habitos-app
+   git clone https://github.com/pedropico/seguimiento-habitos-pedro.git seguimiento-habitos-backend
    cd seguimiento-habitos-backend
    cp .env.example .env          # en PowerShell: copy .env.example .env
    docker compose up --build
@@ -88,7 +89,7 @@ con el backend y el proxy encendidos como se explica arriba:
 
 ```bash
 adb uninstall com.example.seguimiento_habitos_app   # si había una versión de depuración
-adb install -r app-release.apk
+adb install -r seguimiento-habitos-app-v1.0.0.apk
 ```
 
 ## Arquitectura
@@ -157,7 +158,7 @@ El proxy del asistente (`mock-server/`) es Node.js sin dependencias externas.
 
 ## Créditos y licencias
 
-- **Backend**: `seguimiento-habitos-pedro` — FastAPI, SQLAlchemy 2.0, Alembic y
+- **Backend**: `seguimiento-habitos-pedro` (`https://github.com/pedropico/seguimiento-habitos-pedro.git`) — FastAPI, SQLAlchemy 2.0, Alembic y
   MCP. Proyecto del módulo 2.
 - **Paquetes**: los de la tabla de tecnologías, publicados en
   [pub.dev](https://pub.dev) con licencias abiertas: MIT (`get`, `dio`), BSD
