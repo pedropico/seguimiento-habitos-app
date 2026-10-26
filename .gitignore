@@ -1,0 +1,65 @@
+# Misceláneos
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
+
+# IntelliJ
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Flutter / Dart / Pub
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+/build/
+/coverage/
+
+# Symbolication / ofuscación
+app.*.symbols
+app.*.map.json
+
+# Android: el andamiaje se regenera con `flutter create` (ver android/README.md).
+# Solo se versionan el README y el manifiesto, que tienen decisiones propias.
+# Git no entra en una carpeta ignorada, así que se re-incluye nivel por nivel.
+/android/*
+!/android/README.md
+!/android/app/
+/android/app/*
+!/android/app/src/
+/android/app/src/*
+!/android/app/src/main/
+/android/app/src/main/*
+!/android/app/src/main/AndroidManifest.xml
+
+# Caché del compilador de Kotlin
+.kotlin/
+
+# Node (proxy del asistente)
+mock-server/node_modules/
+
+# ─────────────────────────────────────────────────────────────
+# Secretos: NUNCA se versionan. Lo que se versiona es .env.example.
+# ─────────────────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+
+# Widget Preview related
+.widget_preview/
+.claude/settings.local.json
+CLAUDE.local.md

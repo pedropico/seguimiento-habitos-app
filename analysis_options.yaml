@@ -1,0 +1,19 @@
+# Configuración del analizador estático de Dart. Se ejecuta con `flutter analyze`
+# y lo que no pasa el análisis, no entra al proyecto.
+
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  exclude:
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**
+
+linter:
+  rules:
+    # Reglas adicionales sobre las de flutter_lints.
+    prefer_single_quotes: true

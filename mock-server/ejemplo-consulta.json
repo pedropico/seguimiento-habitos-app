@@ -1,0 +1,10 @@
+{
+  "consulta": "¿Cómo voy esta semana?",
+  "resumen": {
+    "habitos": [
+      { "nombre": "Caminar 30 minutos", "objetivo_semanal": 5, "cumplidos_semana": 4, "racha": 3, "marcado_hoy": true },
+      { "nombre": "Leer 20 páginas", "objetivo_semanal": 6, "cumplidos_semana": 2, "racha": 0, "marcado_hoy": false },
+      { "nombre": "Meditar 10 minutos", "objetivo_semanal": 5, "cumplidos_semana": 5, "racha": 5, "marcado_hoy": true }
+    ]
+  }
+}

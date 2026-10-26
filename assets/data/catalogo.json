@@ -1,0 +1,146 @@
+{
+  "version": 1,
+  "fuente": "Catálogo propio de seguimiento-habitos-app, elaborado a partir de recomendaciones generales de salud y productividad.",
+  "plantillas": [
+    {
+      "id": "agua",
+      "nombre": "Beber 8 vasos de agua",
+      "categoria": "salud",
+      "descripcion": "Repartir unos dos litros a lo largo del día, empezando por un vaso al despertar.",
+      "frecuencia_sugerida": 7
+    },
+    {
+      "id": "caminata",
+      "nombre": "Caminar 30 minutos",
+      "categoria": "movimiento",
+      "descripcion": "Una caminata continua a paso vivo, al aire libre si se puede.",
+      "frecuencia_sugerida": 5
+    },
+    {
+      "id": "lectura",
+      "nombre": "Leer 20 páginas",
+      "categoria": "mente",
+      "descripcion": "Lectura sin pantallas, a la misma hora cada día para que sea automático.",
+      "frecuencia_sugerida": 6
+    },
+    {
+      "id": "dormir",
+      "nombre": "Acostarse antes de medianoche",
+      "categoria": "descanso",
+      "descripcion": "Fijar la hora de acostarse es más eficaz que fijar la de levantarse.",
+      "frecuencia_sugerida": 7
+    },
+    {
+      "id": "estiramiento",
+      "nombre": "Estirar 10 minutos",
+      "categoria": "movimiento",
+      "descripcion": "Rutina corta de espalda, cuello y piernas al levantarse o antes de dormir.",
+      "frecuencia_sugerida": 5
+    },
+    {
+      "id": "meditacion",
+      "nombre": "Meditar 10 minutos",
+      "categoria": "mente",
+      "descripcion": "Respiración consciente sentado, con un temporizador para no mirar el reloj.",
+      "frecuencia_sugerida": 5
+    },
+    {
+      "id": "fuerza",
+      "nombre": "Entrenamiento de fuerza",
+      "categoria": "movimiento",
+      "descripcion": "Sesión de 40 minutos con peso corporal o pesas, alternando grupos musculares.",
+      "frecuencia_sugerida": 3
+    },
+    {
+      "id": "verduras",
+      "nombre": "Comer verduras en dos comidas",
+      "categoria": "salud",
+      "descripcion": "Asegurar presencia de vegetales en almuerzo y cena, no solo en una.",
+      "frecuencia_sugerida": 7
+    },
+    {
+      "id": "diario",
+      "nombre": "Escribir el diario",
+      "categoria": "mente",
+      "descripcion": "Tres líneas bastan: qué pasó, qué sentí y qué haré distinto mañana.",
+      "frecuencia_sugerida": 5
+    },
+    {
+      "id": "idioma",
+      "nombre": "Practicar un idioma 15 minutos",
+      "categoria": "aprendizaje",
+      "descripcion": "Sesión corta y diaria; la constancia rinde más que las sesiones largas y espaciadas.",
+      "frecuencia_sugerida": 6
+    },
+    {
+      "id": "sin-pantallas",
+      "nombre": "Una hora sin pantallas antes de dormir",
+      "categoria": "descanso",
+      "descripcion": "Dejar el teléfono fuera del dormitorio es la forma más simple de cumplirlo.",
+      "frecuencia_sugerida": 6
+    },
+    {
+      "id": "planificar",
+      "nombre": "Planificar el día siguiente",
+      "categoria": "productividad",
+      "descripcion": "Cinco minutos al cerrar la jornada para dejar escritas las tres tareas clave.",
+      "frecuencia_sugerida": 5
+    },
+    {
+      "id": "escaleras",
+      "nombre": "Subir por las escaleras",
+      "categoria": "movimiento",
+      "descripcion": "Cambiar el ascensor por las escaleras siempre que sean menos de cinco pisos.",
+      "frecuencia_sugerida": 7
+    },
+    {
+      "id": "codigo",
+      "nombre": "Programar 30 minutos",
+      "categoria": "aprendizaje",
+      "descripcion": "Un ejercicio pequeño y terminado vale más que una sesión larga sin cerrar.",
+      "frecuencia_sugerida": 5
+    },
+    {
+      "id": "gratitud",
+      "nombre": "Anotar tres cosas buenas",
+      "categoria": "mente",
+      "descripcion": "Al final del día, tres hechos concretos del día que salieron bien.",
+      "frecuencia_sugerida": 7
+    },
+    {
+      "id": "ahorro",
+      "nombre": "Registrar los gastos del día",
+      "categoria": "finanzas",
+      "descripcion": "Anotar lo gastado antes de dormir, aunque sea de memoria y aproximado.",
+      "frecuencia_sugerida": 7
+    },
+    {
+      "id": "llamada",
+      "nombre": "Llamar a alguien querido",
+      "categoria": "vinculos",
+      "descripcion": "Una llamada real, no un mensaje. Diez minutos alcanzan.",
+      "frecuencia_sugerida": 2
+    },
+    {
+      "id": "orden",
+      "nombre": "Ordenar el espacio 10 minutos",
+      "categoria": "productividad",
+      "descripcion": "Un temporizador de diez minutos y solo una habitación por vez.",
+      "frecuencia_sugerida": 4
+    },
+    {
+      "id": "sol",
+      "nombre": "Tomar sol 15 minutos",
+      "categoria": "salud",
+      "descripcion": "Luz natural por la mañana: ayuda a ordenar el ciclo de sueño.",
+      "frecuencia_sugerida": 6
+    },
+    {
+      "id": "cocinar",
+      "nombre": "Cocinar en casa",
+      "categoria": "salud",
+      "descripcion": "Preparar al menos una comida completa en casa en lugar de pedirla.",
+      "frecuencia_sugerida": 5
+    }
+  ]
+}
